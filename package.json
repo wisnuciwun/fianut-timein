@@ -1,0 +1,31 @@
+{
+  "name": "fianut-timein",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3.17.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "framer-motion": "^12.11.1",
+    "moment": "^2.30.1",
+    "next": "15.3.8",
+    "next-themes": "^0.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "22.15.17",
+    "@types/react": "19.1.4",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.2",
+    "typescript": "5.8.3"
+  }
+}
