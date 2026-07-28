@@ -113,6 +113,14 @@ const DefaultHeader = () => {
                 >
                   Profil Pengguna
                 </Menu.Item>
+                {profile?.user?.is_owner == 1 && (
+                  <Menu.Item
+                    {...({ value: "report" } as any)}
+                    onClick={() => router.push("/report")}
+                  >
+                    Laporan Absensi
+                  </Menu.Item>
+                )}
                 <Separator mt={1} />
                 <Menu.Item
                   {...({ value: "logout" } as any)}

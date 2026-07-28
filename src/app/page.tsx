@@ -45,6 +45,8 @@ export default function Home() {
       } else {
         toaster.create({ description: res?.message, type: "error", duration: 4000 });
       }
+    } catch (err) {
+      toaster.create({ description: "Gagal memproses absensi. Silakan coba lagi.", type: "error", duration: 4000 });
     } finally {
       setLoading(false);
     }
@@ -61,6 +63,8 @@ export default function Home() {
       } else {
         toaster.create({ description: res?.message, type: "error", duration: 4000 });
       }
+    } catch (err) {
+      toaster.create({ description: "Gagal memproses absensi. Silakan coba lagi.", type: "error", duration: 4000 });
     } finally {
       setLoading(false);
     }
