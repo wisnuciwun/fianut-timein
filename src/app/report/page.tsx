@@ -22,8 +22,10 @@ export default function Report() {
   }, [token]);
 
   useEffect(() => {
-    loadReport();
-  }, [loadReport]);
+    if (profile?.user?.is_owner == 1) {
+      loadReport();
+    }
+  }, [loadReport, profile]);
 
   if (profile?.user?.is_owner != 1) {
     return (
