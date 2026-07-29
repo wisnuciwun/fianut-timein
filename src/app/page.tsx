@@ -7,18 +7,19 @@ import {
   Button,
   Flex,
   Heading,
-  Stack,
   Text,
   Table,
-  VStack,
+  Tabs,
   HStack,
   Icon,
+  VStack,
 } from "@chakra-ui/react";
 import moment from "moment";
 import {
   IoTimeOutline,
   IoPersonOutline,
   IoBusinessOutline,
+  IoListOutline,
 } from "react-icons/io5";
 import DefaultHeader from "../components/defaultheader";
 import { Toaster, toaster } from "../components/ui/toaster";
@@ -30,6 +31,7 @@ import { getProfile } from "./utils/useProfile";
 export default function Home() {
   const token = getToken();
   const profile = getProfile();
+  const [tab, setTab] = useState("absensi");
   const [today, setToday] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -135,115 +137,84 @@ export default function Home() {
     <>
       <Toaster />
       <DefaultHeader />
-      <Box
-        mt={{ base: 10, md: 14 }}
-        minH="100vh"
-        bg="#fffefa"
-        position="relative"
-        overflow="hidden"
-      >
-        <Box
-          position="absolute"
-          top="-120px"
-          right="-80px"
-          w="320px"
-          h="320px"
-          borderRadius="full"
-          bg="red.50"
-          opacity={0.6}
-          zIndex={0}
-        />
-        <Box
-          position="absolute"
-          bottom="-100px"
-          left="-60px"
-          w="260px"
-          h="260px"
-          borderRadius="full"
-          bg="orange.50"
-          opacity={0.5}
-          zIndex={0}
-        />
-        <Box
-          maxW="5xl"
-          mx="auto"
-          px={{ base: 4, md: 8 }}
-          py={{ base: 8, md: 12 }}
-          position="relative"
-          zIndex={1}
-        >
-          <VStack gap={6} align="stretch">
-            <Box
-              bg="white"
-              shadow="md"
-              borderRadius="2xl"
-              borderTop="6px solid"
-              borderTopColor="red.400"
-              p={{ base: 6, md: 10 }}
-            >
-              <Flex
-                direction={{ base: "column", md: "row" }}
-                justify="space-between"
-                align={{ base: "flex-start", md: "center" }}
-                gap={4}
-                mb={8}
-              >
-                <Box>
-                  <Heading fontSize="2xl" mb={6}>
-                    Absensi
-                  </Heading>
-                  <HStack gap={1} mt={2} color="gray.500" fontSize="sm">
-                    <Icon as={IoPersonOutline} boxSize={4} />
-                    <Text fontWeight="500">{userName}</Text>
-                    {companyName && (
-                      <>
-                        <Text>·</Text>
-                        <Icon as={IoBusinessOutline} boxSize={4} />
-                        <Text fontWeight="500">{companyName}</Text>
-                      </>
-                    )}
-                  </HStack>
-                </Box>
-                <VStack align={{ base: "flex-start", md: "flex-end" }} gap={1}>
-                  <HStack gap={2} color="gray.600">
-                    <Icon as={IoTimeOutline} boxSize={5} color="red.400" />
-                    <Text
-                      fontSize="3xl"
-                      fontWeight="700"
-                      fontFamily="mono"
-                      letterSpacing="wider"
-                    >
-                      {currentTime}
-                    </Text>
-                  </HStack>
-                  <Text fontSize="sm" color="gray.400" fontWeight="500">
-                    {currentDate}
-                  </Text>
-                </VStack>
-              </Flex>
+      <Box mt={{ base: 10, md: 14 }} bg="#fffefa">
+        <Box maxW="7xl" mx="auto" px={{ base: 4, md: 8 }} py={8}>
+          <Box bg="white" shadow="md" borderRadius="lg" p={{ base: 6, md: 10 }}>
+            <Heading fontSize="2xl" mb={6}>
+              Timein
+            </Heading>
 
-              <Box
-                bg="gray.100"
-                borderRadius="xl"
-                p={6}
-                borderWidth="1px"
-                borderColor="gray.100"
-              >
-                <Text
-                  fontSize="sm"
-                  fontWeight="600"
-                  color="gray.500"
-                  textTransform="uppercase"
-                  letterSpacing="wide"
-                  mb={4}
+            <Tabs.Root
+              value={tab}
+              variant="subtle"
+              onValueChange={(e) => setTab(e.value)}
+            >
+              <Box overflowX="auto" whiteSpace="nowrap">
+                <Tabs.List>
+                  {/* @ts-expect-error Chakra v3 Tabs.Trigger types missing children */}
+                  <Tabs.Trigger value="absensi">
+                    <Icon as={IoTimeOutline} boxSize={4} /> Absensi
+                  </Tabs.Trigger>
+                  {/* @ts-expect-error Chakra v3 Tabs.Trigger types missing children */}
+                  <Tabs.Trigger value="riwayat">
+                    <Icon as={IoListOutline} boxSize={4} /> Riwayat Absensi
+                  </Tabs.Trigger>
+                </Tabs.List>
+              </Box>
+
+              {/* @ts-expect-error Chakra v3 Tabs.Content types missing children */}
+              <Tabs.Content value="absensi" mt={6}>
+                <Flex
+                  direction={{ base: "column", md: "row" }}
+                  justify="space-between"
+                  align={{ base: "flex-start", md: "center" }}
+                  gap={4}
+                  mb={6}
                 >
-                  Hari ini
-                </Text>
+                  <Box>
+                    <HStack gap={1} color="gray.500" fontSize="sm">
+                      <Icon as={IoPersonOutline} boxSize={4} />
+                      <Text fontWeight="500">{userName}</Text>
+                      {companyName && (
+                        <>
+                          <Text>·</Text>
+                          <Icon as={IoBusinessOutline} boxSize={4} />
+                          <Text fontWeight="500">{companyName}</Text>
+                        </>
+                      )}
+                    </HStack>
+                  </Box>
+                  <VStack
+                    align={{ base: "flex-start", md: "flex-end" }}
+                    gap={1}
+                  >
+                    <HStack gap={2} color="gray.600">
+                      <Icon as={IoTimeOutline} boxSize={5} color="red.400" />
+                      <Text
+                        fontSize="3xl"
+                        fontWeight="700"
+                        fontFamily="mono"
+                        letterSpacing="wider"
+                      >
+                        {currentTime}
+                      </Text>
+                    </HStack>
+                    <Text fontSize="sm" color="gray.400" fontWeight="500">
+                      {currentDate}
+                    </Text>
+                  </VStack>
+                </Flex>
+
                 <Flex
                   direction={{ base: "column", sm: "row" }}
                   gap={4}
                   align="center"
                   justify="space-between"
+                  bg="gray.100"
+                  borderRadius="xl"
+                  p={6}
+                  borderWidth="1px"
+                  borderColor="gray.100"
                 >
                   <Box>
                     <Text fontSize="sm" color="gray.500" mb={1}>
@@ -319,92 +290,95 @@ export default function Home() {
                     )}
                   </Box>
                 </Flex>
-              </Box>
-            </Box>
+              </Tabs.Content>
 
-            <Box
-              bg="white"
-              shadow="md"
-              borderRadius="2xl"
-              p={{ base: 6, md: 10 }}
-            >
-              <Heading fontSize="2xl" mb={6}>
-                Riwayat Absensi
-              </Heading>
-              <Table.Root
-                size="sm"
-                variant="line"
-                borderRadius="lg"
-                overflow="hidden"
-              >
-                <Table.Header bg="gray.50">
-                  <Table.Row>
-                    <Table.ColumnHeader
-                      fontWeight="700"
-                      color="gray.600"
-                      fontSize="xs"
-                      textTransform="uppercase"
-                      letterSpacing="wide"
-                    >
-                      Tanggal
-                    </Table.ColumnHeader>
-                    <Table.ColumnHeader
-                      fontWeight="700"
-                      color="gray.600"
-                      fontSize="xs"
-                      textTransform="uppercase"
-                      letterSpacing="wide"
-                    >
-                      Masuk
-                    </Table.ColumnHeader>
-                    <Table.ColumnHeader
-                      fontWeight="700"
-                      color="gray.600"
-                      fontSize="xs"
-                      textTransform="uppercase"
-                      letterSpacing="wide"
-                    >
-                      Pulang
-                    </Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {history.map((row: any) => (
-                    <Table.Row key={row.id}>
-                      <Table.Cell fontWeight="500" color="gray.700">
-                        {moment(row.date).format("DD MMM YYYY")}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <HStack gap={2}>
-                          <Box w={2} h={2} borderRadius="full" bg="teal.400" />
-                          <Text fontWeight="500" color="gray.700">
-                            {row.clock_in_at
-                              ? moment(row.clock_in_at).format("HH:mm")
-                              : "-"}
-                          </Text>
-                        </HStack>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <HStack gap={2}>
-                          <Box w={2} h={2} borderRadius="full" bg="red.400" />
-                          <Text fontWeight="500" color="gray.700">
-                            {row.clock_out_at
-                              ? moment(row.clock_out_at).format("HH:mm")
-                              : "-"}
-                          </Text>
-                        </HStack>
-                      </Table.Cell>
+              {/* @ts-expect-error Chakra v3 Tabs.Content types missing children */}
+              <Tabs.Content value="riwayat" mt={6}>
+                <Table.Root
+                  size="sm"
+                  variant="line"
+                  borderRadius="lg"
+                  overflow="hidden"
+                >
+                  <Table.Header bg="gray.50">
+                    <Table.Row>
+                      <Table.ColumnHeader
+                        fontWeight="700"
+                        color="gray.600"
+                        fontSize="xs"
+                        textTransform="uppercase"
+                        letterSpacing="wide"
+                      >
+                        Tanggal
+                      </Table.ColumnHeader>
+                      <Table.ColumnHeader
+                        fontWeight="700"
+                        color="gray.600"
+                        fontSize="xs"
+                        textTransform="uppercase"
+                        letterSpacing="wide"
+                      >
+                        Masuk
+                      </Table.ColumnHeader>
+                      <Table.ColumnHeader
+                        fontWeight="700"
+                        color="gray.600"
+                        fontSize="xs"
+                        textTransform="uppercase"
+                        letterSpacing="wide"
+                      >
+                        Pulang
+                      </Table.ColumnHeader>
                     </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
-              {history.length === 0 && (
-                <Text textAlign="center" color="gray.400" mt={6} fontSize="sm">
-                  Belum ada riwayat absensi
-                </Text>
-              )}
-            </Box>
-          </VStack>
+                  </Table.Header>
+                  <Table.Body>
+                    {history.map((row: any) => (
+                      <Table.Row key={row.id}>
+                        <Table.Cell fontWeight="500" color="gray.700">
+                          {moment(row.date).format("DD MMM YYYY")}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <HStack gap={2}>
+                            <Box
+                              w={2}
+                              h={2}
+                              borderRadius="full"
+                              bg="teal.400"
+                            />
+                            <Text fontWeight="500" color="gray.700">
+                              {row.clock_in_at
+                                ? moment(row.clock_in_at).format("HH:mm")
+                                : "-"}
+                            </Text>
+                          </HStack>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <HStack gap={2}>
+                            <Box w={2} h={2} borderRadius="full" bg="red.400" />
+                            <Text fontWeight="500" color="gray.700">
+                              {row.clock_out_at
+                                ? moment(row.clock_out_at).format("HH:mm")
+                                : "-"}
+                            </Text>
+                          </HStack>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table.Root>
+                {history.length === 0 && (
+                  <Text
+                    textAlign="center"
+                    color="gray.400"
+                    mt={6}
+                    fontSize="sm"
+                  >
+                    Belum ada riwayat absensi
+                  </Text>
+                )}
+              </Tabs.Content>
+            </Tabs.Root>
+          </Box>
         </Box>
       </Box>
     </>
