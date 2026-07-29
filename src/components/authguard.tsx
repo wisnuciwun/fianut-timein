@@ -1,4 +1,4 @@
-"use client";
+"use client"; // MUST be a client component
 
 import {
   Box,
@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { req } from "../app/utils/req";
 import { api } from "../app/config/api";
 
@@ -18,28 +18,35 @@ export default function AuthGuard({ children }) {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(null);
 
-  const handleGetProfile = useCallback(async (token = null) => {
-    try {
-      const valid = await req(`${api.verifyToken}?token=${token}&app_name=Timein`, "GET");
-      if (valid?.success) {
-        const res = await req(`${api.profile}?token=${token}&app_name=Timein`, "GET");
-        if (res?.success) {
-          localStorage.setItem("fianut_profile", JSON.stringify(res.data));
-        }
+  const handleGetProfile = async (token = null) => {
+    req(`${api.verifyToken}?token=${token}&app_name=Timein`, "GET") // dont forget to rename app
+      .then(async (valid) => {
+        if (valid.success) {
+          await req(`${api.profile}?token=${token}&app_name=Timein`, "GET").then(
+            (res) => {
+              if (res.success) {
+                localStorage.setItem(
+                  "fianut_profile",
+                  JSON.stringify(res.data)
+                );
+              }
+            }
+          );
 
-        router.replace("/");
-        setTimeout(() => {
-          setIsAuthorized(true);
-        }, 2000);
-      } else {
-        setIsAuthorized(false);
-      }
-    } catch (err) {
+          router.replace("/");
+          setTimeout(() => {
+            setIsAuthorized(true);
+          }, 2000);
+        } else {
+          setIsAuthorized(false);
+        }
+      })
+    .catch(() => {
       localStorage.removeItem("fianut_auth_token");
       localStorage.removeItem("fianut_profile");
       setIsAuthorized(false);
-    }
-  }, [router]);
+    });
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -58,7 +65,7 @@ export default function AuthGuard({ children }) {
       localStorage.removeItem("fianut_profile");
       setIsAuthorized(false);
     }
-  }, [handleGetProfile]);
+  }, [router]);
 
   if (isAuthorized == null) {
     return (
@@ -77,6 +84,17 @@ export default function AuthGuard({ children }) {
             alt="fianut"
             h={6}
             mb={4}
+          />
+          <Image
+            src={`${process.env.NEXT_PUBLIC_FIANUT_MAIN_URL}/lost.jpg`}
+            alt="Login illustration"
+            w={"100%"}
+            maxW="400px"
+            mx="auto"
+            mb={4}
+            transition="transform 0.3s"
+            _hover={{ transform: "scale(1.05)" }}
+            style={{ mixBlendMode: "multiply" }}
           />
           <Text fontSize="xl" mb={4}>
             Oops, kamu belum masuk. Yuk
